@@ -1,0 +1,284 @@
+<script src="https://rawgit.com/stevekrouse/WoofJS/master/dist/woof.js"></script>
+<script>
+setBackdropColor('blue')
+
+var rocket = new Image({
+  url: "https://pbs.twimg.com/media/CYMoIQHWwAQW7WS.png",
+  angle: UP,
+  width: 60, 
+  height: 30
+})
+rocket.turnLeft(88) 
+rocket.showing = true
+
+var HP = 100
+ new Text({
+  text: () => "HP: " + HP,
+  x: minX + 50,
+  y: -300,
+  size: 30
+})
+ 
+var Boss = 50000
+new Text({
+  text: () => "Boss: " + Boss,
+  x: 0,
+  y: 250,
+  size: 30
+})
+
+
+ forever(() => {
+  if (keysDown.includes('UP')){ 
+   rocket.y += 8
+    }
+    if (keysDown.includes('DOWN')) {
+   rocket.y += -8
+    }
+    if (keysDown.includes('RIGHT')) {
+   rocket.x += 8
+    }
+    if (keysDown.includes('LEFT')) {
+   rocket.x += -8
+    }
+});
+
+
+var lasers = [];
+
+forever(() => {
+  if (keysDown.includes('SPACE')) {
+    var laser = new Rectangle({
+  width: 9, 
+  height: 22, 
+  color: "pink",
+  x: rocket.x,
+  y: rocket.y
+  })
+    laser.showing = false;
+    lasers.push(laser);
+    }
+})
+
+forever(() => {
+  lasers.forEach(laser => {
+    if (laser.y >= maxY) {
+      lasers.remove(laser)  
+      laser.delete()
+    } else {
+    laser.y += 10;
+    laser.showing = true;
+    if (laser.touching(spaceship)) {
+    Boss += -1
+    }
+    }
+    
+  })
+})
+
+var spaceship = new Image({url:"http://freepngimages.com/wp-content/uploads/2015/08/ufo-spaceship.png",
+    width: 200,
+    height: 160,
+    x: 0,
+    y: 295,                      
+    rotationStyle:'no rotation'                       
+})
+
+forever(() => {
+ spaceship.move(3)
+ if (spaceship.x > maxX) {
+   spaceship.angle = LEFT
+ }
+   if (spaceship.x <   minX) {
+   spaceship.angle = RIGHT
+ }
+})
+
+var deathRay = new Image({
+  url:"http://bkey-wiki.s3.amazonaws.com/images/using-graphical-effects/using-graphical-effects-gradient-light-over-blue.png",
+  width: 10,
+  height: 650,
+})
+
+deathRay.showing = false
+
+var timer = 0
+
+every(1, 'second', () => {
+  timer += 1
+})
+
+
+forever(() => {
+  if (timer === 10) {
+    deathRay.showing = true
+  }
+  if (timer === 13) {
+    deathRay.showing = false
+    timer = 0
+  }
+  deathRay.x = spaceship.x
+  deathRay.y = spaceship.y + -320
+  if (deathRay.touching(rocket)) {
+    deathRay.showing = false
+    timer = 0
+    HP += -25
+  }
+})
+
+var plane1 = new Image({
+  url:"https://maxcdn.icons8.com/Share/icon/ultraviolet/military//fighter_jet1600.png",
+  width: 60,
+  height: 60,
+  x: -150,
+  y: 180,
+  angle: DOWN
+})
+
+var plane2 = new Image({
+  url:"https://maxcdn.icons8.com/Share/icon/ultraviolet/military//fighter_jet1600.png",
+  width: 60,
+  height: 60,
+  x: 150,
+  y: 180,
+  angle: DOWN
+})
+
+forever(() => {
+  plane1.pointTowards(rocket)
+  plane2.pointTowards(rocket)
+})
+
+
+
+var bigBombs = []
+every(5, 'second', () => {
+ var bigBomb = new Image({
+ width: 100,
+height: 100,
+angle: 130,
+   x: spaceship.x,
+   y: spaceship.y,
+    url:"http://fantheflamedates.com/image/devotional_missile_bill_by_yoshigo99-d5c032x.png",
+})
+bigBombs.push(bigBomb)
+})
+
+forever(() => {
+ bigBombs.forEach(bigBomb=>{
+   bigBomb.y += -2
+   if (bigBomb.y < minY) {
+     bigBomb.delete()
+     bigBombs.remove(bigBomb)
+   }
+   if (bigBomb.touching(rocket)) {
+     HP += -10
+     bigBomb.delete()
+     bigBombs.remove(bigBomb)
+   }
+ }) 
+})
+
+
+var planeRockets1 = []
+every(0.75, 'second', () => {
+    var planeRocket1 = new Image({
+  url:"http://pixelartmaker.com/art/63ebc6e229cc200.png",
+  width: 100,
+  height: 100,
+  x: plane1.x,
+  y: plane1.y,
+  angle: plane1.angle 
+})
+    planeRocket1.pointTowards(rocket)
+    planeRockets1.push(planeRocket1)
+  })
+
+forever(() => {
+  planeRockets1.forEach(planeRocket1 =>{
+    planeRocket1.move(3)
+  })
+   planeRockets2.forEach(planeRocket2 =>{
+    planeRocket2.move(3)
+  })
+})
+
+var planeRockets2 = []
+every(0.75, 'second', () => {
+    var planeRocket2 = new Image({
+  url:"http://pixelartmaker.com/art/63ebc6e229cc200.png",
+  width: 100,
+  height: 100,
+  x: plane2.x,
+  y: plane2.y,
+  angle: plane2.angle 
+})
+    planeRocket2.pointTowards(rocket)
+    planeRockets2.push(planeRocket2)
+  })
+
+forever(() => {
+  planeRockets1.forEach(planeRocket1=>{
+    if (planeRocket1.touching(rocket)) {
+    HP += -1
+    planeRockets1.remove(planeRocket1)
+    planeRocket1.delete()
+  }
+    if (planeRocket1.y < minY) {
+    planeRockets1.remove(planeRocket1)
+    planeRocket1.delete()
+  }
+    if (plane1HP <= 0) {
+      planeRockets1.remove(planeRocket1)
+      planeRocket2.delete()
+    }
+  })
+  planeRockets2.forEach(planeRocket2=>{
+    if (planeRocket2.touching(rocket)) {
+    HP += -1
+    planeRockets2.remove(planeRocket2)
+    planeRocket2.delete()
+  }
+    if (planeRocket2.y < minY) {
+    planeRockets2.remove(planeRocket2)
+     planeRocket2.delete()
+  } 
+    if (plane2HP <= 0) {
+      planeRockets2.remove(planeRocket2)
+      planeRocket2.delete()
+    }
+  })
+  
+})
+
+var plane1HP = 3000
+
+var plane2HP = 3000
+
+forever(() => {
+  lasers.forEach(laser=>{
+    if (laser.touching(plane1)) {
+      plane1HP -= 1
+    }
+    if (laser.touching(plane2)) {
+      plane2HP -= 1
+    }
+  })
+     if (plane1HP <= 0) {
+       plane1.hide()
+     }
+     if (plane2HP <= 0) {
+        plane2.hide()
+      }
+})
+
+
+forever(() => {
+  if (HP <= 0) {
+    freeze()
+  }
+  if (Boss <= 0) {
+    freeze()
+  }
+})
+</script>
