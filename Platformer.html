@@ -1,0 +1,386 @@
+<script src="https://rawgit.com/stevekrouse/WoofJS/master/dist/woof.js"></script>
+<script>
+
+
+setBackdropURL("http://pre00.deviantart.net/f26b/th/pre/f/2013/050/0/c/level_background_for_a_mobile_game__by_bvigec-d5vi8b0.jpg")
+var ground = new Rectangle({
+  width: width,
+  height: height / 7,
+  color: "#228b22",
+  y: minY
+})
+
+ var youWin = new Text({
+  text: () => "YOU WIN!", 
+  size: 30, 
+  x: 0,
+  y: 0,
+  color: "rgb(100, 50, 240)", 
+  fontFamily: "arial", 
+  textAlign: "left",
+  showing: false
+   })
+ 
+var bb8 = new Image({
+  url: "./docs/images/BB8.png",
+  width: 45,
+  height: 65,
+  x: 100,
+  y: ground.y + 100,
+  rotationStyle: 'ROTATE LEFT RIGHT'
+})
+
+//bb8 behavior
+forever(() => {
+  if (keysDown.includes('RIGHT')) {
+    bb8.move(6)
+    bb8.angle = RIGHT
+  }
+  if (keysDown.includes('LEFT')) {
+    bb8.move(6)
+    bb8.angle = LEFT
+  }
+  if (bb8.x > maxX) {
+    bb8.x = minX
+    levelNumber += 1
+  }
+  obstacles.forEach(obstacle => {
+    if (bb8.touching(obstacle) && bb8.y < obstacle.top && bb8.y > obstacle.bottom && bb8.angle === RIGHT) {
+      bb8.x -= 20
+    }
+    if (bb8.touching(obstacle) && bb8.y < obstacle.top && bb8.y > obstacle.bottom && bb8.angle === LEFT) {
+      bb8.x += 20
+    }
+    if (bb8.touching(obstacle) && bb8.y < obstacle.bottom) {
+      bb8.y -= 20
+    }
+    if (bb8.touching(obstacle) && bb8.y > obstacle.top) {
+      if (keysDown.includes('UP')) {
+        jumpPower = 20
+      } else {
+        jumpPower = 0
+      }
+    }
+  })
+})
+
+var levelNumber = 0
+
+
+// obstacles for levels
+var obstacle1 = new Rectangle({
+  width: 150,
+  height: 50,
+  color: "black",
+  x: 100,
+  y: -150
+})
+var obstacle2 = new Rectangle({
+  width: 150,
+  height: 50,
+  color: "red",
+  x: 250,
+  y: -150
+})
+
+var obstacles = [obstacle1, obstacle2]
+
+// store the y coordinates of the top and bottom edges of the obstacles
+
+obstacles.forEach(obstacle => {
+  obstacle.top = obstacle.y + obstacle.height / 2
+  obstacle.bottom = obstacle.y - obstacle.height / 2
+})
+
+
+//massive world
+
+forever(() => {
+  if (levelNumber === 0) {
+    obstacle1.showing = true
+    obstacle1.x = maxX + -150
+    obstacle2.showing = true
+    obstacle2.x = maxX + -325
+  }
+  if (levelNumber === 1) {
+    obstacle1.x = -100
+    obstacle1.y = ground.y + 150
+    obstacle1.width = 50
+    obstacle2.y = ground.y + 200
+    obstacle2.showing = true
+    obstacle2.x = maxX - 150
+  }
+  if (levelNumber === 2) {
+    obstacle1.width = 300
+    obstacle1.y = ground.y + 175
+    obstacle1.x = maxX - 150
+    obstacle2.x = minX + 100
+    obstacle2.y = ground.y + 125
+    obstacle2.width = 50
+  }
+  if (levelNumber === 3) {
+    obstacle1.x = maxX + -100
+    obstacle1.y = -200
+    obstacle1.height = 270
+    obstacle2.x = minX + 325
+  }
+  if (levelNumber === 4) {
+    obstacle2.showing = false
+    obstacle1.showing = false
+  }
+  obstacles.forEach(obstacle => {
+    obstacle.top = obstacle.y + obstacle.height / 2
+    obstacle.bottom = obstacle.y - obstacle.height / 2
+  })
+  if (bb8.x < minX) {
+    bb8.x += 20
+  }
+})
+
+//jumping
+var jumpPower = 0
+
+forever(() => {
+  bb8.y += jumpPower
+  jumpPower += -1
+  if (bb8.touching(ground)) {
+    jumpPower = 0
+  }
+  obstacles.forEach(obstacle => {
+    if (bb8.touching(obstacle) && bb8.y > obstacle.top) {
+      jumpPower = 0
+    }
+    if (bb8.touching(obstacle) && bb8.y < obstacle.bottom) {
+      jumpPower = -5
+    }
+  })
+
+})
+
+onKeyDown(() => {
+  if (keysDown.includes('UP') && bb8.touching(ground)) {
+    jumpPower = 20
+  }
+  obstacles.forEach(obstacle => {
+    if (keysDown.includes('UP') && bb8.y > obstacle.top && bb8.touching(obstacle)) {
+      jumpingPower = 20
+    }
+  })
+})
+
+//shooting
+var fireballs = []
+onKeyDown(() => {
+  if (keysDown.includes('SPACE')) {
+    var fireball = new Circle({
+      color: '#c72000',
+      radius: 6,
+      x: bb8.x,
+      y: bb8.y,
+      angle: bb8.angle
+    })
+    fireball.speedX = 5
+    fireball.speedY = -1
+    fireballs.push(fireball)
+  }
+})
+
+forever(() => {
+  fireballs.forEach(fireball => {
+    fireball.move(fireball.speedX)
+    fireball.y += fireball.speedY
+    fireball.speedY += -1
+    if (fireball.touching(ground)) {
+      fireball.speedY = -(fireball.speedY * 0.9)
+    }
+    enemies.forEach(enemy => {
+      if (fireball.touching(enemy)) {
+        enemies.remove(enemy)
+        enemy.delete()
+      }
+    })
+    obstacles.forEach(obstacle => {
+      if (fireball.touching(obstacle)) {
+        if (fireball.y > obstacle.top) {
+
+          fireball.speedY = -(fireball.speedY * 0.9)
+        } else if (fireball.y < obstacle.bottom) {
+          fireball.speedY = -(fireball.speedY * 0.9)
+
+        } else {
+          fireball.speedX = -fireball.speedX
+        }
+
+      }
+    })
+
+  })
+})
+
+//enemy
+var enemies = []
+after(3, 'second', () => {
+  every(random(2.5, 3), 'second', () => {
+    var enemy = new Image({
+      url: "https://vignette4.wikia.nocookie.net/lisa-rpg/images/4/44/Battler_Fardy.png/revision/latest?",
+      height: 75,
+      width: 75,
+      x: maxX,
+      y: ground.y + 60
+    })
+    enemy.speedX = -2
+    enemies.push(enemy)
+  })
+})
+
+var jumpEnemy = 0
+
+forever(() => {
+  enemies.forEach(enemy => {
+    enemy.move(enemy.speedX)
+    jumpEnemy = 0
+    enemy.y += jumpEnemy
+    if (levelNumber === 3) {
+      enemy.y = -25
+    }
+    if (levelNumber === 4) {
+      enemy.hide()
+    }
+    obstacles.forEach(obstacle => {
+      if (enemy.touching(obstacle)) {
+        enemy.speedX = -(enemy.speedX)
+      }
+      if (enemy.touching(obstacle) && enemy.y > obstacle.top) {
+        enemy.speedX = enemy.speedX
+      }
+
+      if (enemy.touching(ground)) {
+        jumpEnemy = 0
+      }
+      if (!enemy.touching(obstacle) && enemy.y > obstacle.top) {
+        jumpEnemy = -1 
+      }
+    })
+    if (enemy.x > maxX || enemy.x < minX) {
+      enemies.remove(enemy);
+      enemy.delete()
+    }
+    if (enemy.touching(bb8)) {
+      enemies.remove(enemy)
+      enemy.delete()
+      removeLife()
+    }
+  })
+
+})
+
+
+//life
+
+var lifeX = minX + 50
+var lives = []
+for (var i = 0; i < 5; i++) {
+  var life = new Image({
+    url: 'http://vignette3.wikia.nocookie.net/boombeach/images/f/f2/Tumblr_static_heart.png/revision/latest?cb=20140219103749',
+    height: 30,
+    width: 30,
+    y: maxY - 80,
+    x: lifeX
+  })
+  lifeX += 30
+  lives.push(life)
+}
+
+//remove heart
+
+var removeLife = () => {
+  var life = lives.pop();
+  life.hide();
+  bb8.brightness = 50
+  after(0.2, 'second', () => {
+    life.show()
+    bb8.brightness = 100
+    after(0.2, 'second', () => {
+      life.hide()
+      after(0.1, 'second', () => {
+        life.show()
+        after(0.1, 'second', () => {
+          life.delete()
+        })
+      })
+    })
+  })
+}
+
+var boss = new Image({
+  url:'http://s.lolstatic.com/site/skins-arcade/37aef2f0e4451bb4288f2a1927d389889b16d56c/images/skins/blitzcrank-profile.png',
+  height: 100,
+  width: 100,
+  x: maxX,
+  y: ground.y + 100,
+  showing: false,
+  angle: RIGHT,
+  rotationStyle: "ROTATE LEFT RIGHT"
+})
+
+boss.speedX = -5
+boss.speedY = 20
+
+forever(() => {
+  if (levelNumber === 4) {
+    boss.showing = true
+    boss.move(boss.speedX)
+    boss.y += boss.speedY
+    boss.speedY -= 1
+    if (bb8.x > 310) {
+      bb8.x += -20
+    }
+    enemies.forEach(enemy => {
+      enemies.remove(enemy)
+      enemy.delete()
+    })
+  }
+  if (boss.touching(ground)) {
+    boss.speedY = -(boss.speedY * 0.95)
+  }
+  if (boss.x < minX) {
+    boss.angle = LEFT
+  }
+  if (boss.x > maxX) {
+    boss.angle = RIGHT
+  }
+  if (bossHealth <= 0) {
+    boss.showing = false
+  }
+})
+
+var bossHealth = 50
+new Text({
+  text: () => "boss health: " + boss.health,
+  x:150,
+  y: 300,
+  size: 20,
+  showing: false
+})
+bossHealth = 50
+
+forever(() => {
+  if (levelNumber === 4) {
+    bossHealth.showing = true
+  }
+  fireballs.forEach(fireball =>{
+    if (fireball.touching(boss)) {
+    boss.health -= 1
+    fireballs.remove(fireball)
+    fireball.delete()
+  }
+  })
+  if (boss.touching(bb8)) {
+    boss.showing = false
+    removeLife()
+    bb8.x = -270
+    bb8.y = ground.y + 200
+    }
+})
+</script>
+  
