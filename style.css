@@ -48,3 +48,8 @@ body {
 #nav ul ul li a:hover {
     color: #699;
 }
+#nav_right {
+    text-align: right;
+    position: absolute;
+    margin: 0 auto;
+}
