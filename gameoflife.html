@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <title> Conway's Game of Life </title>        
+    </head>
+    <body>
+        <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas>
+
+        <script>
+            var gridHeight = 10;
+            var gridWidth = 10;
+            var theGrid = createArray(gridWidth);
+            var newGrid = createArray(gridWidth);
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            ctx.fillStyle = "#FF0000";
+            var numberAlive = 0;
+            var generationCount = 0;
+
+            fillArray();
+            mainLoop();
+            console.log('Generation #'+generationCount+' Number Alive #'+numberAlive);
+
+            function mainLoop() {
+                drawGrid();
+                updateGrid();
+                generationCount++;
+                requestAnimationFrame(mainLoop);  // If all cells dead we should stop?
+            }
+
+            function updateGrid() {
+                // Create new grid for the next generation
+                for (var x = 1; x < gridWidth-1 ; x++) {
+                    for (var y = 1; y < gridHeight-1 ; y++) {
+                        var neighbors = 0;
+                        neighbors += theGrid[x-1][y-1]; //bototom-left
+                        neighbors += theGrid[x-1][y]; //left
+                        neighbors += theGrid[x-1][y+1]; //top-left
+                        neighbors += theGrid[x+1][y-1]; //bottom-right
+                        neighbors += theGrid[x+1][y]; //right
+                        neighbors += theGrid[x+1][y+1]; //top-right
+                        neighbors += theGrid[x][y-1]; //bottom-center
+                        neighbors += theGrid[x][y+1]; //top=center
+                        switch(neighbors){
+                            case 2:
+                                newGrid[x][y] = theGrid[x][y];
+                                break;
+                            case 3:
+                                newGrid[x][y] = 1;
+                                break;
+                            default:
+                                newGrid[x][y] = 0
+                        }
+                    }
+                }
+                theGrid = newGrid;
+            }
+
+            function drawGrid() {
+                // Diplay theGrid on our canvas
+                ctx.clearRect(0, 0, gridWidth, gridHeight);
+                for (var x = 0; x < gridWidth ; x++) {
+                    for (var y = 0; y < gridHeight ; y++) {
+                        if (theGrid[x][y] === 1) {
+                            ctx.fillRect(x*40, y*40, 40, 40);
+                        }
+                    }
+                }
+                console.log('Generation #'+generationCount+' Number Alive #'+numberAlive);
+            }
+
+            function createArray(rows) {
+                // Creates a 2D array with specified number of rows
+                var arr=[];
+                for (var i=0; i < rows; i++) {
+                    arr[i] = [];
+                }
+                return arr;
+            }
+
+            function fillArray() {
+                // Fill theGrid with random values
+                for (var x = 1; x < gridWidth-1 ; x++) {
+                    for (var y = 1; y < gridHeight-1 ; y++) {
+                        theGrid[x][y] = Math.round(Math.random());
+                        if (theGrid[x][y] === 1) {
+                            numberAlive++;
+                        }
+                    }
+                }
+            }
+        </script>
+        
+    </body>
+</html>
