@@ -8,8 +8,6 @@ body {
     background-color: #222;
 }
 #nav_wrapper {
-    width: 960px;
-    margin: 0 auto;
     text-align: left;
 }
 #nav ul {
@@ -49,7 +47,5 @@ body {
     color: #699;
 }
 #nav_right {
-    text-align: right;
-    position: absolute;
-    margin: 0 auto;
+    float:right;
 }
