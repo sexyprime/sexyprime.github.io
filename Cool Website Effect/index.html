@@ -3,6 +3,7 @@
 <html>
 
 <head>
+    <audio autoplay src="typingsound.m4a">    </audio>
     <title>Theodore Tarr Programming</title>
     <link href="style.css" type="text/css" rel="stylesheet" />
     <style>
@@ -17,9 +18,13 @@
         .neon {
             transform: translate(-50%, -50%);
             animation: bounceIn linear 1s infinite;
-            position: absolute;
+            animation: type 1s steps(21);
+            font-family: consolas;
+            border-right: 5px solid white;
+            overflow: hidden;
             top: 50%;
             left: 50%;
+            position: absolute;
             margin: 0;
             padding: 0 20px;
             font-size: 6em;
@@ -62,12 +67,19 @@
       opacity: 1;
   }
 }
+
+    @keyframes type {
+        0% {
+            width: 0ch;
+        }
+        100% {
+            width: 21ch;
+        }
+    }
     </style>
 </head>
 <body>
-    <h1 class="neon" data-text="[Neon_Light]">({THEODORE_TARR})
-        [PROGRAMMING]
-    </h1>
+    <h1 class="neon" data-text="[Neon_Light]"> ({THEODORE_TARR}) </h1>
 </body>
     </style>
     <ul class="bubbles">
