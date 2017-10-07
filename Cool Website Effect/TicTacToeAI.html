@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+
+    <link rel="stylesheet" href="TicTacToeAI.css">
+    <script type="text/javascript" src="TicTacToeAI.js"></script>
+
+</head>
+<body>
+    <div id="main">
+
+         <div id="board">
+             
+            <div id="claim">
+
+            <div class="tile" onclick="claim(this);"></div>
+            <div class="tile" onclick="claim(this);"></div>
+            <div class="tile" onclick="claim(this);"></div>
+            <div class="tile" onclick="claim(this);"></div>
+            <div class="tile" onclick="claim(this);"></div>
+            <div class="tile" onclick="claim(this);"></div>
+            <div class="tile" onclick="claim(this);"></div>
+            <div class="tile" onclick="claim(this);"></div>
+            <div class="tile" onclick="claim(this);"></div>
+
+            <div class="button" onclick="aiturn(state, 0, currentPlayer, true)">Computer</div>
+            <div class="button" onclick="reset()">Reset</div>
+            <div id="toggle" onclick="toggle()">Show Value</div>
+            
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

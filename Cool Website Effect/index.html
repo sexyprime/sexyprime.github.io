@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Theodore Tarr Programming</title>
+    <link href="style.css" type="text/css" rel="stylesheet" />
+    <style>
+        @import url('https://fonts:googleapis.com/css?family=Quicksand:300');
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .neon {
+            transform: translate(-50%, -50%);
+            animation: bounceIn linear 1s infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: 0;
+            padding: 0 20px;
+            font-size: 6em;
+            color: #fff;
+            text-shadow: 0 0 20px #ff005b;
+            text-align: center;
+        }
+
+        .neon:after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 0 20px;
+            z-index: -1;
+            color: #ff005b;
+            filter: blur(15px);
+        }
+        .neon:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fe3a80;
+            z-index: -2;
+            opacity: .5;
+            filter: blur(40px);
+        }
+        
+        @keyframes bounceIn{
+  0%{
+      opacity: 1;
+  }
+  50%{
+      opacity: 0.5;
+  }
+  100%{
+      opacity: 1;
+  }
+}
+    </style>
+</head>
+<body>
+    <h1 class="neon" data-text="[Neon_Light]">({THEODORE_TARR})
+        [PROGRAMMING]
+    </h1>
+</body>
+    </style>
+    <ul class="bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</head>
+
+<body>x
+        <div id="nav">
+                <div id="nav_wrapper">
+                    <ul>
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li> <a href="#">Games</a>
+                            <ul>
+                                <li><a href="woof-test.html">Boss Battle</a>
+                                </li>
+                                <li><a href="Platformer.html">Platformer</a>
+                                </li>
+                                <li><a href="Clicker.html">Clicker</a>
+                                </li>
+                                <li><a href="TicTacToeAI.html">Tic Tac Toe</a>
+                                </li>
+                                <li><a href="Pong.html">Pong</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li id="nav_right"><a href="https://www.youtube.com/c/TheodoreTarr">Theodore Tarr</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Nav wrapper end -->
+            </div>
+            <!-- Nav end -->
+</body>
+</html>
