@@ -17,7 +17,6 @@
 
         .neon {
             transform: translate(-50%, -50%);
-            animation: bounceIn linear 1s infinite;
             animation: type 1s steps(21);
             font-family: consolas;
             border-right: 5px solid white;
@@ -31,8 +30,8 @@
             color: #fff;
             text-shadow: 0 0 20px #ff005b;
             text-align: center;
+            text-decoration: none;
         }
-
         .neon:after {
             content: attr(data-text);
             position: absolute;
@@ -55,18 +54,6 @@
             opacity: .5;
             filter: blur(40px);
         }
-        
-        @keyframes bounceIn{
-  0%{
-      opacity: 1;
-  }
-  50%{
-      opacity: 0.5;
-  }
-  100%{
-      opacity: 1;
-  }
-}
 
     @keyframes type {
         0% {
@@ -76,10 +63,15 @@
             width: 21ch;
         }
     }
+
+    nav_right:hover {
+        color: #ff0;
+    }
+
     </style>
 </head>
 <body>
-    <h1 class="neon" data-text="[Neon_Light]"> ({THEODORE_TARR}) </h1>
+    <h1 class="neon" data-text="[Neon_Light]"><a href="https://www.youtube.com/channel/UCVOIiFQ2pD5QcZjVZcZAOwA">({THEODORE_TARR})</a></h1>
 </body>
     </style>
     <ul class="bubbles">
@@ -111,10 +103,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <li id="nav_right"><a href="https://www.youtube.com/c/TheodoreTarr">Theodore Tarr</a></li>
                     </ul>
                 </div>
-                
                 <!-- Nav wrapper end -->
             </div>
             <!-- Nav end -->
